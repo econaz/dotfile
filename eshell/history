@@ -51,3 +51,34 @@ ls
 cd ../tlpi_exercise/chapter34-64/chapter49/ 
 ls
 man 2 open
+su
+clashoff
+clash off
+ls
+./50_1 
+gcc 50_1.c -o 50_1 ~/libtlpi.a
+./50_1 
+gcc 50_1.c -o 50_1 ~/libtlpi.a
+./50_1 
+gcc 50_1.c -o 50_1 ~/libtlpi.a
+./50_1 
+gcc 50_1.c -o 50_1 ~/libtlpi.a
+./50_1 
+gcc 50_1.c -o 50_1 ~/libtlpi.a
+./50_1 
+gcc 50_1.c -o 50_1 ~/libtlpi.a
+./50_1 
+gcc 50_1.c -o 50_1 ~/libtlpi.a
+./50_1 
+gcc 50_1.c -o 50_1 ~/libtlpi.a
+./50_1 
+gcc 50_1.c -o 50_1 ~/libtlpi.a
+./50_1 
+gcc 50_1.c -o 50_1 ~/libtlpi.a
+./50_1 
+gcc 50_1.c -o 50_1 ~/libtlpi.a
+./50_1 
+gcc 50_1.c -o 50_1 ~/libtlpi.a
+./50_1 
+man 3 clock_gettime
+man clock_gettime

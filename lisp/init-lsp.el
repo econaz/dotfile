@@ -25,6 +25,8 @@
     (let ((completion-styles '(basic partial-completion)))
       (apply func args)))
   :custom
+  (setq company-transformers '(delete-consecutive-dups
+                               company-sort-prefer-same-case-prefix))
   (company-idle-delay 0)
   ;; Easy navigation to candidates with M-<n>
   (company-show-quick-access t)
@@ -41,6 +43,7 @@
   (company-dabbrev-code-everywhere t)
   ;; call `tempo-expand-if-complete' after completion
   (company-tempo-expand t)
+;  (company-sort-prefer-same-case-prefix t)
   ;; Ignore uninteresting files. Items end with a slash are recognized as
   ;; directories.
   (company-files-exclusions '(".git/" ".DS_Store"))
