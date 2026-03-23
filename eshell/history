@@ -82,3 +82,90 @@ gcc 50_1.c -o 50_1 ~/libtlpi.a
 ./50_1 
 man 3 clock_gettime
 man clock_gettime
+ls
+./53_1 
+./53_1 
+./53_1 
+./53_1 
+./53_1 
+./53_1 
+./53_1 
+./53_1 
+./53_1 
+cp ~/ClionPorject/tlpi_code/semun.h ./semun.h
+ls
+ls
+cp ~/ClionPorject/tlpi_code/binary_sems.h ./binary_sems.h
+ls
+./53_4_posix 1000
+s
+ls
+./53_4_posix 1000
+./53_4_posix 100
+./53_4_posix 10
+./53_4_posix 10
+./53_4_systemv 100000
+./53_4_posix 10
+./53_4_systemv 100000
+./53_4_systemv 1000
+./53_4_systemv 1000
+./53_4_systemv 1000
+./53_4_systemv 
+./53_4_systemv 1000
+man 3 sem_init
+sem_open
+man 3 sem_open
+man 3 sem_init
+./54_1_reader 
+./54_1_writer 
+man 3 sem_wait
+./54_1_writer 
+ls
+./54_1_writer 
+man 3 sem_init
+./54_1_writer 
+ks
+ls
+./54_1_writer 
+man 3 sem_open
+rm -rf 54_1_writer
+ls
+./54_1_writer 
+gcc 54_1_writer.c -o 54_1_writer ~/libtlpi.a
+ls
+./54_1_writer 
+./54_1_writer 
+./54_1_writer 
+./54_1_writer 
+./54_1_writer 
+./54_1_reader 
+./54_1_reader 
+man 3 shm_open
+./54_1_reader 
+ls
+./54_1_reader 
+./54_1_writer 
+./54_1_writer 
+./54_1_reader 
+./54_1_writer 
+./54_1_writer 
+./54_1_writer 
+./54_1_writer 
+./54_1_writer 
+./54_1_writer 
+ls
+./54_1_writer 
+./54_1_reader 
+ls
+./54_1_writer 
+ls
+./54_1_writer 
+./54_1_writer 
+./54_1_writer 
+./54_1_writer 
+./54_1_writer 
+./54_1_writer 
+./54_1_reader 
+./54_1_reader 
+ls
+./54_1_writer 

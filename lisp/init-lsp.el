@@ -10,52 +10,251 @@
 ;; 'company-mode' has an online manual now.
 ;;
 ;; https://company-mode.github.io/manual/
-(use-package company
-  :ensure t
-  :hook (prog-mode . company-mode)
-  :bind (:map company-mode-map
-         ([remap completion-at-point] . company-complete)
-         :map company-active-map
-         ("C-s"     . company-filter-candidates)
-         ([tab]     . company-complete-common-or-cycle)
-         ([backtab] . company-select-previous-or-abort))
-  :config
-  (define-advice company-capf--candidates (:around (func &rest args))
-    "Try default completion styles."
-    (let ((completion-styles '(basic partial-completion)))
-      (apply func args)))
-  :custom
-  (setq company-transformers '(delete-consecutive-dups
-                               company-sort-prefer-same-case-prefix))
-  (company-idle-delay 0)
-  ;; Easy navigation to candidates with M-<n>
-  (company-show-quick-access t)
-  (company-require-match nil)
-  (company-minimum-prefix-length 3)
-  (company-tooltip-width-grow-only t)
-  (company-tooltip-align-annotations t)
-  ;; complete `abbrev' only in current buffer and make dabbrev case-sensitive
-  (company-dabbrev-other-buffers nil)
-  (company-dabbrev-ignore-case nil)
-  (company-dabbrev-downcase nil)
-  ;; make dabbrev-code case-sensitive
-  (company-dabbrev-code-ignore-case nil)
-  (company-dabbrev-code-everywhere t)
-  ;; call `tempo-expand-if-complete' after completion
-  (company-tempo-expand t)
-;  (company-sort-prefer-same-case-prefix t)
-  ;; Ignore uninteresting files. Items end with a slash are recognized as
-  ;; directories.
-  (company-files-exclusions '(".git/" ".DS_Store"))
-  ;; No icons
-  (company-format-margin-function nil)
-  (company-backends '((company-capf :with company-tempo)
-                      company-files
-                      (company-dabbrev-code company-keywords)
-                      company-dabbrev)))
+;(use-package company
+;  :disabled t
+;;  :ensure t
+;  :hook (prog-mode . company-mode)
+;  :bind (:map company-mode-map
+;         ([remap completion-at-point] . company-complete)
+;         :map company-active-map
+;         ("C-s"     . company-filter-candidates)
+;         ([tab]     . company-complete-common-or-cycle)
+;         ([backtab] . company-select-previous-or-abort))
+;  :config
+;  (setq company-transformers '(company-sort-by-backend-importance))
+;  (define-advice company-capf--candidates (:around (func &rest args))
+;    "Try default completion styles."
+;    (let ((completion-styles '(basic partial-completion)))
+;      (apply func args)))
+;  :custom
+;  (company-idle-delay 0)
+;  ;; Easy navigation to candidates with M-<n>
+;  (company-show-quick-access t)
+;  (company-require-match nil)
+;  (company-minimum-prefix-length 3)
+;  (company-tooltip-width-grow-only t)
+;  (company-tooltip-align-annotations t)
+;  ;; complete `abbrev' only in current buffer and make dabbrev case-sensitive
+;  (company-dabbrev-other-buffers nil)
+;  (company-dabbrev-ignore-case nil)
+;  (company-dabbrev-downcase nil)
+;  ;; make dabbrev-code case-sensitive
+;  (company-dabbrev-code-ignore-case nil)
+;  (company-dabbrev-code-everywhere t)
+;  ;; call `tempo-expand-if-complete' after completion
+;  (company-tempo-expand t)
+;  ;; Ignore uninteresting files. Items end with a slash are recognized as
+;  ;; directories.
+;  (company-files-exclusions '(".git/" ".DS_Store"))
+;  ;; No icons
+;  (company-format-margin-function nil)
+;  (company-backends '((company-capf :with company-tempo)
+;                      company-files
+;                      (company-dabbrev-code company-keywords)
+
+                                        ;                      company-dabbrev)))
+
+ (use-package vertico
+    :custom (vertico-count 15)
+    :bind (:map vertico-map
+           ("RET" . vertico-directory-enter)
+           ("DEL" . vertico-directory-delete-char)
+           ("M-DEL" . vertico-directory-delete-word))
+    :hook ((after-init . vertico-mode)
+           (rfn-eshadow-update-overlay . vertico-directory-tidy)))
+
+  ;; Display vertico in the child frame
+  ; (use-package vertico-posframe
+  ;   :functions (childframe-completion-workable-p
+  ;               posframe-poshandler-frame-center-near-bottom)
+  ;   :commands vertico-posframe-mode
+  ;   :hook ((server-after-make-frame vertico-mode)
+  ;          .
+  ;          (lambda ()
+  ;            "Handle vertico child frame."
+  ;            (and (childframe-completion-workable-p)
+  ;                 (vertico-posframe-mode 1))))
+  ;   :init (setq vertico-posframe-poshandler
+  ;               #'posframe-poshandler-frame-center-near-bottom
+  ;               vertico-posframe-parameters
+  ;               '((left-fringe  . 8)
+  ;                 (right-fringe . 8))))
+
+ (use-package orderless
+    :custom
+    (completion-styles '(orderless basic))
+    (completion-category-defaults nil)
+    (completion-category-overrides '((file (styles basic partial-completion))))
+    (orderless-component-separator #'orderless-escapable-split-on-space))
+
+
+(use-package consult
+    :defines (xref-show-xrefs-function xref-show-definitions-function)
+    :defines shr-color-html-colors-alist
+    :autoload (consult-register-format consult-register-window consult-xref)
+    :autoload (consult--read consult--customize-put)
+    :commands (consult-narrow-help)
+    :functions (list-colors-duplicates consult-colors--web-list)
+    :bind (;; C-c bindings in `mode-specific-map'
+           ("C-c M-x" . consult-mode-command)
+           ("C-c h"   . consult-history)
+           ("C-c k"   . consult-kmacro)
+           ("C-c i"   . consult-info)
+           ("C-c r"   . consult-ripgrep)
+           ("C-c T"   . consult-theme)
+           ("C-."     . consult-imenu)
+
+           ("C-c c e" . consult-colors-emacs)
+           ("C-c c w" . consult-colors-web)
+           ("C-c c f" . describe-face)
+           ("C-c c l" . find-library)
+           ("C-c c t" . consult-theme)
+
+           ([remap Info-search]        . consult-info)
+           ([remap isearch-forward]    . consult-line)
+           ([remap recentf-open-files] . consult-recent-file)
+
+           ;; C-x bindings in `ctl-x-map'
+           ("C-x M-:" . consult-complex-command)     ;; orig. repeat-complex-command
+           ("C-x b"   . consult-buffer)              ;; orig. switch-to-buffer
+           ("C-x 4 b" . consult-buffer-other-window) ;; orig. switch-to-buffer-other-window
+           ("C-x 5 b" . consult-buffer-other-frame)  ;; orig. switch-to-buffer-other-frame
+           ("C-x r b" . consult-bookmark)            ;; orig. bookmark-jump
+           ("C-x p b" . consult-project-buffer)      ;; orig. project-switch-to-buffer
+           ;; Custom M-# bindings for fast register access
+           ("M-#"     . consult-register-load)
+           ("M-'"     . consult-register-store)      ;; orig. abbrev-prefix-mark (unrelated)
+           ("C-M-#"   . consult-register)
+           ;; Other custom bindings
+           ("M-y"     . consult-yank-pop)            ;; orig. yank-pop
+           ;; M-g bindings in `goto-map'
+           ("M-g e"   . consult-compile-error)
+           ("M-g f"   . consult-flymake)
+           ("M-g g"   . consult-goto-line)           ;; orig. goto-line
+           ("M-g M-g" . consult-goto-line)           ;; orig. goto-line
+           ("M-g o"   . consult-outline)             ;; Alternative: consult-org-heading
+           ("M-g m"   . consult-mark)
+           ("M-g k"   . consult-global-mark)
+           ("M-g i"   . consult-imenu)
+           ("M-g I"   . consult-imenu-multi)
+           ;; M-s bindings in `search-map'
+           ("M-s d"   . consult-find)
+           ("M-s D"   . consult-locate)
+           ("M-s g"   . consult-grep)
+           ("M-s G"   . consult-git-grep)
+           ("M-s r"   . consult-ripgrep)
+           ("M-s l"   . consult-line)
+           ("M-s L"   . consult-line-multi)
+           ("M-s k"   . consult-keep-lines)
+           ("M-s u"   . consult-focus-lines)
+           ;; Isearch integration
+           ("M-s e"   . consult-isearch-history)
+           :map isearch-mode-map
+           ("M-e"     . consult-isearch-history)      ;; orig. isearch-edit-string
+           ("M-s e"   . consult-isearch-history)      ;; orig. isearch-edit-string
+           ("M-s l"   . consult-line)                 ;; needed by consult-line to detect isearch
+           ("M-s L"   . consult-line-multi)           ;; needed by consult-line to detect isearch
+
+           ;; Minibuffer history
+           :map minibuffer-local-map
+           ("M-s" . consult-history)                  ;; orig. next-matching-history-element
+           ("M-r" . consult-history))                 ;; orig. previous-matching-history-element
+    :init
+    ;; Optionally configure the register formatting. This improves the register
+    ;; preview for `consult-register', `consult-register-load',
+    ;; `consult-register-store' and the Emacs built-ins.
+    (setq register-preview-delay 0.5
+          register-preview-function #'consult-register-format)
+
+    ;; Optionally tweak the register preview window.
+    ;; This adds thin lines, sorting and hides the mode line of the window.
+    (advice-add #'register-preview :override #'consult-register-window)
+
+    ;; Use Consult to select xref locations with preview
+    (with-eval-after-load 'xref
+      (setq xref-show-xrefs-function #'consult-xref
+            xref-show-definitions-function #'consult-xref))
+
+    ;; More utils
+    (defvar consult-colors-history nil
+      "History for `consult-colors-emacs' and `consult-colors-web'.")
+
+    ;; No longer preloaded in Emacs 28.
+    (autoload 'list-colors-duplicates "facemenu")
+    ;; No preloaded in consult.el
+    (autoload 'consult--read "consult")
+
+    (defun consult-colors-emacs (color)
+      "Show a list of all supported colors for a particular frame.
+
+You can insert the name (default), or insert or kill the hexadecimal or RGB
+value of the selected COLOR."
+      (interactive
+       (list (consult--read (list-colors-duplicates (defined-colors))
+                            :prompt "Emacs color: "
+                            :require-match t
+                            :category 'color
+                            :history '(:input consult-colors-history))))
+      (insert color))
+
+    ;; Adapted from counsel.el to get web colors.
+    (defun consult-colors--web-list nil
+      "Return list of CSS colors for `counsult-colors-web'."
+      (require 'shr-color)
+      (sort (mapcar #'downcase (mapcar #'car shr-color-html-colors-alist)) #'string-lessp))
+
+    (defun consult-colors-web (color)
+      "Show a list of all CSS colors.\
+
+You can insert the name (default), or insert or kill the hexadecimal or RGB
+value of the selected COLOR."
+      (interactive
+       (list (consult--read (consult-colors--web-list)
+                            :prompt "Color: "
+                            :require-match t
+                            :category 'color
+                            :history '(:input consult-colors-history))))
+      (insert color))
+    :config
+    ;; Optionally configure preview. The default value
+    ;; is 'any, such that any key triggers the preview.
+    ;; (setq consult-preview-key 'any)
+    ;; (setq consult-preview-key '("S-<down>" "S-<up>"))
+    (setq consult-preview-key nil)
+    ;; For some commands and buffer sources it is useful to configure the
+    ;; :preview-key on a per-command basis using the `consult-customize' macro.
+    (consult-customize
+     consult-line consult-line-multi :preview-key 'any
+     consult-buffer consult-recent-file consult-theme :preview-key '(:debounce 1.0 any)
+     consult-goto-line :preview-key '(:debounce 0.5 any)
+     consult-ripgrep consult-git-grep consult-grep
+     :initial (selected-region-or-symbol-at-point)
+     :preview-key '(:debounce 0.5 any))
+
+    ;; Optionally configure the narrowing key.
+    ;; Both < and C-+ work reasonably well.
+    (setq consult-narrow-key "<") ;; "C-+"
+
+    ;; Optionally make narrowing help available in the minibuffer.
+    ;; You may want to use `embark-prefix-help-command' or which-key instead.
+    (define-key consult-narrow-map (vconcat consult-narrow-key "?") #'consult-narrow-help))
+
+  (use-package consult-dir
+    :ensure t
+    :bind (("C-x C-d" . consult-dir)
+           :map minibuffer-local-completion-map
+           ("C-x C-d" . consult-dir)
+           ("C-x C-j" . consult-dir-jump-file)))
+
+  (use-package consult-flyspell
+    :bind ("M-g s" . consult-flyspell))
+
+  (use-package consult-yasnippet
+    :bind ("M-g y" . consult-yasnippet))
 
 ;; lsp-mode
 (use-package lsp-mode
+;  :disabled t
   :ensure t
   :hook (prog-mode . lsp-deferred)
   :bind (:map lsp-mode-map
@@ -71,7 +270,7 @@
   (lsp-keymap-prefix "C-c l")
   (lsp-enable-links nil)                    ;; no clickable links
   (lsp-enable-folding nil)                  ;; use `hideshow' instead
-  (lsp-enable-snippet t)                    ;; no snippets, it requires `yasnippet'
+  (lsp-enable-snippet nil)                    ;; no snippets, it requires `yasnippet'
   (lsp-enable-file-watchers nil)            ;; performance matters
   (lsp-enable-text-document-color nil)      ;; as above
   (lsp-enable-symbol-highlighting nil)      ;; as above
@@ -89,7 +288,8 @@
   (lsp-completion-enable-additional-text-edit nil))
 
 (use-package eglot
-  :disabled
+  :disabled t
+;  :ensure t
   :hook (prog-mode . eglot-ensure)
   :bind (:map eglot-mode-map
          ("C-c f" . eglot-format)
@@ -134,6 +334,94 @@
                                        :foldingRangeProvider
                                        :colorProvider
                                        :inlayHintProvider)))
+
+
+ (use-package corfu
+    :autoload (corfu-quit consult-completion-in-region)
+    :functions (persistent-scratch-save corfu-move-to-minibuffer)
+    :custom
+    (corfu-auto t)
+    (corfu-auto-prefix 2)
+    (corfu-count 12)
+    (corfu-preview-current nil)
+    (corfu-on-exact-match nil)
+    (corfu-auto-delay 0.2)
+    (corfu-popupinfo-delay '(0.4 . 0.2))
+    (global-corfu-modes '((not erc-mode
+                               circe-mode
+                               help-mode
+                               gud-mode
+                               vterm-mode)
+                          t))
+    :custom-face
+    (corfu-border ((t (:inherit region :background unspecified))))
+    :bind ("M-/" . completion-at-point)
+    :hook ((after-init . global-corfu-mode)
+           (global-corfu-mode . corfu-popupinfo-mode)
+           (global-corfu-mode . corfu-history-mode))
+    :config
+    ;;Quit completion before saving
+    (add-hook 'before-save-hook #'corfu-quit)
+    (advice-add #'persistent-scratch-save :before #'corfu-quit)
+
+    ;; Move completions to minibuffer
+    (defun corfu-move-to-minibuffer ()
+      (interactive)
+      (pcase completion-in-region--data
+        (`(,beg ,end ,table ,pred ,extras)
+         (let ((completion-extra-properties extras)
+               completion-cycle-threshold completion-cycling)
+           (consult-completion-in-region beg end table pred)))))
+    (keymap-set corfu-map "M-m" #'corfu-move-to-minibuffer)
+    (add-to-list 'corfu-continue-commands #'corfu-move-to-minibuffer))
+
+  (unless (or (display-graphic-p)
+              (featurep 'tty-child-frames))
+  (use-package corfu-terminal
+    :hook (global-corfu-mode . corfu-terminal-mode)))
+
+
+
+ (use-package marginalia
+   :hook (after-init . marginalia-mode))
+
+ (use-package emacs
+    :custom
+    ;; TAB cycle if there are only few candidates
+    ;; (completion-cycle-threshold 3)
+
+    ;; Enable indentation+completion using the TAB key.
+    ;; `completion-at-point' is often bound to M-TAB.
+    (tab-always-indent 'complete)
+
+    ;; Emacs 30 and newer: Disable Ispell completion function. As an alternative,
+    ;; try `cape-dict'.
+    (text-mode-ispell-word-completion nil)
+
+    ;; Emacs 28 and newer: Hide commands in M-x which do not apply to the current
+    ;; mode.  Corfu commands are hidden, since they are not used via M-x. This
+    ;; setting is useful beyond Corfu.
+    (read-extended-command-predicate #'command-completion-default-include-p))
+
+(use-package cape
+    :commands (cape-file cape-elisp-block cape-keyword)
+    :autoload (cape-wrap-noninterruptible cape-wrap-nonexclusive cape-wrap-buster)
+    :autoload (cape-wrap-silent)
+    :init
+    (add-to-list 'completion-at-point-functions #'cape-dabbrev)
+    (add-to-list 'completion-at-point-functions #'cape-file)
+    (add-to-list 'completion-at-point-functions #'cape-elisp-block)
+    (add-to-list 'completion-at-point-functions #'cape-keyword))
+    ;; (add-to-list 'completion-at-point-functions #'cape-abbrev)
+
+    ;; Make these capfs composable.
+;    (advice-add 'lsp-completion-at-point :around #'cape-wrap-noninterruptible)
+;    (advice-add 'lsp-completion-at-point :around #'cape-wrap-nonexclusive))
+;    (advice-add 'comint-completion-at-point :around #'cape-wrap-nonexclusive)
+;    (advice-add 'eglot-completion-at-point :around #'cape-wrap-buster)
+;    (advice-add 'eglot-completion-at-point :around #'cape-wrap-nonexclusive)
+;    (advice-add 'pcomplete-completions-at-point :around #'cape-wrap-nonexclusive))
+
 
 (provide 'init-lsp)
 ;;; init-lsp.el ends here
