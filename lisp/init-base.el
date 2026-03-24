@@ -14,6 +14,9 @@
 
 (set-frame-font "Jetbrains Mono Nerd Font 20" nil t)
 
+(add-hook 'prog-mode-hook #'show-paren-mode)
+
+
 (use-package minibuffer
   :ensure nil
   :bind (:map minibuffer-local-map
