@@ -1,6 +1,7 @@
+;;; lexical-binding
 
 
-
+;;; Code:
 (add-to-list 'load-path "~/.emacs.d/lisp/")
 
 
@@ -22,5 +23,6 @@
 
 (require 'init-yasnippet)
 
+;(require 'init-elisp)
 
 (provide 'init)

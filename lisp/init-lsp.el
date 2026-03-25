@@ -10,74 +10,54 @@
 ;; 'company-mode' has an online manual now.
 ;;
 ;; https://company-mode.github.io/manual/
-;(use-package company
-;  :disabled t
-;;  :ensure t
-;  :hook (prog-mode . company-mode)
-;  :bind (:map company-mode-map
-;         ([remap completion-at-point] . company-complete)
-;         :map company-active-map
-;         ("C-s"     . company-filter-candidates)
-;         ([tab]     . company-complete-common-or-cycle)
-;         ([backtab] . company-select-previous-or-abort))
-;  :config
-;  (setq company-transformers '(company-sort-by-backend-importance))
-;  (define-advice company-capf--candidates (:around (func &rest args))
-;    "Try default completion styles."
-;    (let ((completion-styles '(basic partial-completion)))
-;      (apply func args)))
-;  :custom
-;  (company-idle-delay 0)
-;  ;; Easy navigation to candidates with M-<n>
-;  (company-show-quick-access t)
-;  (company-require-match nil)
-;  (company-minimum-prefix-length 3)
-;  (company-tooltip-width-grow-only t)
-;  (company-tooltip-align-annotations t)
-;  ;; complete `abbrev' only in current buffer and make dabbrev case-sensitive
-;  (company-dabbrev-other-buffers nil)
-;  (company-dabbrev-ignore-case nil)
-;  (company-dabbrev-downcase nil)
-;  ;; make dabbrev-code case-sensitive
-;  (company-dabbrev-code-ignore-case nil)
-;  (company-dabbrev-code-everywhere t)
-;  ;; call `tempo-expand-if-complete' after completion
-;  (company-tempo-expand t)
-;  ;; Ignore uninteresting files. Items end with a slash are recognized as
-;  ;; directories.
-;  (company-files-exclusions '(".git/" ".DS_Store"))
-;  ;; No icons
-;  (company-format-margin-function nil)
-;  (company-backends '((company-capf :with company-tempo)
-;                      company-files
-;                      (company-dabbrev-code company-keywords)
-
-                                        ;                      company-dabbrev)))
-
-
-
-(use-package vertico
+(use-package company
   :ensure t
-    :custom (vertico-count 15)
-    :bind (:map vertico-map
-           ("RET" . vertico-directory-enter)
-           ("DEL" . vertico-directory-delete-char)
-           ("M-DEL" . vertico-directory-delete-word))
-    :hook ((after-init . vertico-mode)
-           (rfn-eshadow-update-overlay . vertico-directory-tidy)))
+  :hook (prog-mode . company-mode)
+  :bind (:map company-mode-map
+         ([remap completion-at-point] . company-complete)
+         :map company-active-map
+         ("C-s"     . company-filter-candidates)
+         ([tab]     . company-complete-common-or-cycle)
+         ([backtab] . company-select-previous-or-abort))
+  :config
+  (define-advice company-capf--candidates (:around (func &rest args))
+    "Try default completion styles."
+    (let ((completion-styles '(basic partial-completion)))
+      (apply func args)))
+  :custom
+  (company-idle-delay 0)
+  ;; Easy navigation to candidates with M-<n>
+  (company-show-quick-access t)
+  (company-require-match nil)
+  (company-minimum-prefix-length 2)
+  (company-tooltip-width-grow-only t)
+  (company-tooltip-align-annotations t)
+  ;; complete `abbrev' only in current buffer and make dabbrev case-sensitive
+  (company-dabbrev-other-buffers nil)
+  (company-dabbrev-ignore-case t)
+  (company-dabbrev-downcase nil)
+  ;; make dabbrev-code case-sensitive
+  (company-dabbrev-code-ignore-case nil)
+  (company-dabbrev-code-everywhere t)
+ 
+  ;; call `tempo-expand-if-complete' after completion
+;  (company-tempo-expand t)
+;  (company-echo-strip-common-frontend t)
+  ;; Ignore uninteresting files. Items end with a slash are recognized as
+  ;; directories.
+  (company-files-exclusions '(".git/" ".DS_Store"))
+  ;; No icons
+  (company-format-margin-function nil)
 
-
+  (company-backends '((company-capf :with company-yasnippet)
+                      (company-files company-clang)
+                      (company-dabbrev-code company-keywords)
+                      company-dabbrev)))
 
 ;; lsp-mode
 (use-package lsp-mode
-;  :disabled t
   :ensure t
-  :init
-  (defun my/lsp-mode-setup-completion ()
-    (setf (alist-get 'styles (alist-get 'lsp-capf completion-category-defaults))
-          '(eglot)))
-  :hook ((prog-mode . lsp-deferred)
-         (lsp-completion-mode . my/lsp-mode-setup-completion))
+  :hook (prog-mode . lsp-deferred)
   :bind (:map lsp-mode-map
          ("C-c f" . lsp-format-region)
          ("C-c d" . lsp-describe-thing-at-point)
@@ -91,7 +71,7 @@
   (lsp-keymap-prefix "C-c l")
   (lsp-enable-links nil)                    ;; no clickable links
   (lsp-enable-folding nil)                  ;; use `hideshow' instead
-  (lsp-enable-snippet nil)                    ;; no snippets, it requires `yasnippet'
+  (lsp-enable-snippet t)                  ;; no snippets, it requires `yasnippet'
   (lsp-enable-file-watchers nil)            ;; performance matters
   (lsp-enable-text-document-color nil)      ;; as above
   (lsp-enable-symbol-highlighting nil)      ;; as above
@@ -108,8 +88,19 @@
   (lsp-eldoc-enable-hover nil)              ;; disable eldoc hover
   (lsp-completion-enable-additional-text-edit nil))
 
+(use-package lsp-ui
+  :ensure t
+  :after (lsp-mode)
+  :custom
+  (lsp-ui-doc-enable t)
+  (lsp-ui-sideline-show-diagnostics t)
+;  (lsp-ui-sideline-show-hover t)
+  (lsp-ui-sideline-update-mode "line"))
+;  (lsp-ui-sideline-delay 2))
+
+  
 (use-package eglot
-;  :disabled t
+                                        ;  :disabled
   :ensure t
   :hook (prog-mode . eglot-ensure)
   :bind (:map eglot-mode-map
@@ -155,6 +146,5 @@
                                        :foldingRangeProvider
                                        :colorProvider
                                        :inlayHintProvider)))
-
 (provide 'init-lsp)
 ;;; init-lsp.el ends here
