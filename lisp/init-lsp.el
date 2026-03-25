@@ -54,7 +54,10 @@
 
                                         ;                      company-dabbrev)))
 
- (use-package vertico
+
+
+(use-package vertico
+  :ensure t
     :custom (vertico-count 15)
     :bind (:map vertico-map
            ("RET" . vertico-directory-enter)
@@ -62,23 +65,6 @@
            ("M-DEL" . vertico-directory-delete-word))
     :hook ((after-init . vertico-mode)
            (rfn-eshadow-update-overlay . vertico-directory-tidy)))
-
-  ;; Display vertico in the child frame
-  ; (use-package vertico-posframe
-  ;   :functions (childframe-completion-workable-p
-  ;               posframe-poshandler-frame-center-near-bottom)
-  ;   :commands vertico-posframe-mode
-  ;   :hook ((server-after-make-frame vertico-mode)
-  ;          .
-  ;          (lambda ()
-  ;            "Handle vertico child frame."
-  ;            (and (childframe-completion-workable-p)
-  ;                 (vertico-posframe-mode 1))))
-  ;   :init (setq vertico-posframe-poshandler
-  ;               #'posframe-poshandler-frame-center-near-bottom
-  ;               vertico-posframe-parameters
-  ;               '((left-fringe  . 8)
-  ;                 (right-fringe . 8))))
 
 
 
@@ -123,8 +109,8 @@
   (lsp-completion-enable-additional-text-edit nil))
 
 (use-package eglot
-  :disabled t
-;  :ensure t
+;  :disabled t
+  :ensure t
   :hook (prog-mode . eglot-ensure)
   :bind (:map eglot-mode-map
          ("C-c f" . eglot-format)
@@ -169,7 +155,6 @@
                                        :foldingRangeProvider
                                        :colorProvider
                                        :inlayHintProvider)))
-
 
 (provide 'init-lsp)
 ;;; init-lsp.el ends here
