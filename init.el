@@ -1,5 +1,9 @@
-;;; lexical-binding
+;;; init.el --- The necessary settings -*- lexical-binding: t -*-
 
+
+
+;;; Commentary:
+;; 
 
 ;;; Code:
 (add-to-list 'load-path "~/.emacs.d/lisp/")
@@ -30,3 +34,4 @@
 ;(require 'init-lspbridge)
 
 (provide 'init)
+;;; init.el ends here

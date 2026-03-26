@@ -1,4 +1,11 @@
+;;; init-base.el --- init-base.el -*- lexical-binding:t -*-
 
+
+
+;;; Commentary:
+;; 
+
+;;; Code:
 
 (setq make-backup-files nil)
 
@@ -15,6 +22,7 @@
 (set-frame-font "Jetbrains Mono Nerd Font 20" nil t)
 
 (add-hook 'prog-mode-hook #'show-paren-mode)
+
 
 
 (use-package minibuffer
@@ -63,3 +71,4 @@
   (completions-detailed t))
 
 (provide 'init-base)
+;;; init-base.el ends here

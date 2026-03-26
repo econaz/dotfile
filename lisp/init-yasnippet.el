@@ -1,3 +1,8 @@
+;;; init-yasnippet.el --- yasnippet setting -*- lexical-binding:t -*-
+;;; Commentary:
+;; 
+
+;;; Code:
  (use-package yasnippet
   :ensure t
   :hook ((prog-mode . yas-minor-mode)
@@ -16,9 +21,7 @@
             try-complete-lisp-symbol))
 
     )
-)  
-
-
+)
 (use-package consult-yasnippet
   :ensure t)
 (use-package yasnippet-snippets
@@ -26,3 +29,4 @@
   :after yasnippet)
 
 (provide 'init-yasnippet)
+;;; init-yasnippet.el ends here
