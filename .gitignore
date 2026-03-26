@@ -6,3 +6,5 @@ eln-cache/
 tree-sitter/
 auto-save-list/
 snippets/
+.lsp-session-*
+lsp-bridgei/

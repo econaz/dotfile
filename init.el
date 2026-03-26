@@ -3,6 +3,7 @@
 
 ;;; Code:
 (add-to-list 'load-path "~/.emacs.d/lisp/")
+(add-to-list 'load-path "~/.emacs.d/lsp-bridge")
 
 
 (require 'init-packages)
@@ -23,6 +24,9 @@
 
 (require 'init-yasnippet)
 
+(require 'init-evil)
 ;(require 'init-elisp)
+
+;(require 'init-lspbridge)
 
 (provide 'init)

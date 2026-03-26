@@ -9,7 +9,7 @@
 ;;
 ;; 'company-mode' has an online manual now.
 ;;
-;; https://company-mode.github.io/manual/
+; https://company-mode.github.io/manual/
 (use-package company
   :ensure t
   :hook (prog-mode . company-mode)
@@ -67,6 +67,7 @@
   (with-no-warnings
     (lsp-enable-which-key-integration t))
   :custom
+  
   (lsp-warn-no-matched-clients nil)
   (lsp-keymap-prefix "C-c l")
   (lsp-enable-links nil)                    ;; no clickable links
@@ -100,12 +101,13 @@
 
   
 (use-package eglot
-                                        ;  :disabled
   :ensure t
   :hook (prog-mode . eglot-ensure)
   :bind (:map eglot-mode-map
          ("C-c f" . eglot-format)
          ("C-c d" . eldoc-doc-buffer)
+
+
          ("C-c a" . eglot-code-actions)
          ("C-c r" . eglot-rename)
          ("C-c l" . eglot-command-map))
