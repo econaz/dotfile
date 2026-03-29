@@ -1,4 +1,4 @@
-;;; init.el --- The necessary settings -*- lexical-binding: t -*-
+;; init.el --- The necessary settings -*- lexical-binding: t -*-
 
 
 
@@ -33,5 +33,8 @@
 
 ;(require 'init-lspbridge)
 
+(require 'init-rust)
+
+(require 'init-zig)
 (provide 'init)
 ;;; init.el ends here

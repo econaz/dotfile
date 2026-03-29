@@ -13,6 +13,7 @@
   :init
   (setq evil-disable-insert-state-bindings t)
   (setq evil-want-Y-yank-to-eol t)
+  (setq evil-want-keybinding nil)
   :hook (after-init . evil-mode)
   )
 

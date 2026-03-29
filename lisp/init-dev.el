@@ -1,3 +1,10 @@
+;;; init-dev.el --- init-dev.el flycheck -*- lexical-binding: t; -*-
+
+;;; Commentary:
+;; 
+
+;;; Code:
+
 (use-package flycheck
   :ensure t
   :hook (prog-mode . flycheck-mode)
@@ -14,4 +21,6 @@
 
 
 
+
 (provide 'init-dev)
+;;; init-dev.el ends here
