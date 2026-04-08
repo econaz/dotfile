@@ -11,6 +11,8 @@
 
 (setq load-prefer-newer t)
 
+(electric-pair-mode t)
+
 (setq-default indent-tabs-mode nil)
 
 (global-display-line-numbers-mode 1)
