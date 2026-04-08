@@ -11,6 +11,7 @@
 (use-package evil
   :ensure t
   :init
+  (setq evil-want-keybinding nil)
   (setq evil-disable-insert-state-bindings t)
   (setq evil-want-Y-yank-to-eol t)
   (setq evil-want-keybinding nil)
@@ -21,7 +22,8 @@
   :after evil
   :ensure t
   :config
-  (evil-collection-init))
+  (evil-collection-init)
+  )
 
 (provide 'init-evil)
 
