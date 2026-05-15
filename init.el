@@ -36,5 +36,7 @@
 (require 'init-rust)
 
 (require 'init-zig)
+
+(require 'init-dart)
 (provide 'init)
 ;;; init.el ends here

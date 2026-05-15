@@ -1,4 +1,4 @@
-;;; Init-zig.el --- init-zig.el  -*- lexical-binding: t; -*-
+;;; init-zig.el --- -*- lexical-binding:t -*-
 
 ;;; Commentary:
 ;; 

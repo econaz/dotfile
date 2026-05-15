@@ -6,7 +6,8 @@
  (use-package yasnippet
   :ensure t
   :hook ((prog-mode . yas-minor-mode)
-         (org-mode . yas-minor-mode))
+         (org-mode . yas-minor-mode)
+         (dart-mode . yas-minor-mode))
   :init
   :config
   (progn
